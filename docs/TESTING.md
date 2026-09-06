@@ -41,3 +41,7 @@ Physical-device performance certification was not performed. GitHub Pages public
 - `scripts/banner-check.mjs`: the original SVG renders, component transforms animate, and `prefers-reduced-motion` stops the animation. Both assembled and separated frames were inspected.
 - Dependency patch updates: Vite 6.4.3 and Vitest 3.2.7. `npm audit` reports zero known vulnerabilities at the time of this check. Generated production asset hashes were unchanged by these tooling patches.
 - Reference review and the final additions are recorded in `docs/RESEARCH.md`. This validates model relationships against references, not surveyed dimensional accuracy.
+
+## Publication
+
+The explorer was pushed to `main` and the GitHub Pages workflow completed successfully on 6 September 2026. Publication uses the configured custom domain, `lloyds.cristianexer.dev`. The workflow reads Pages metadata before building so a custom-domain change cannot leave asset URLs pointing at a repository subpath. Both root and repository-subpath production bundles were built and checked locally.

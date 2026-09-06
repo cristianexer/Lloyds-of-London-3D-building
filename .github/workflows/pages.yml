@@ -26,11 +26,13 @@ jobs:
       - run: npm ci
       - name: Verify model and interaction invariants
         run: npm test
-      - name: Build for the repository subpath
+      - name: Read the configured Pages address
+        id: pages
+        uses: actions/configure-pages@v5
+      - name: Build for the configured Pages path
         run: npm run build
         env:
-          VITE_BASE_PATH: /Lloyds-of-London-3D-building/
-      - uses: actions/configure-pages@v5
+          VITE_BASE_PATH: ${{ steps.pages.outputs.base_path }}/
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist

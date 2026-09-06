@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  <a href="https://cristianexer.github.io/Lloyds-of-London-3D-building/"><strong>Explore the building →</strong></a>
+  <a href="https://lloyds.cristianexer.dev/"><strong>Explore the building →</strong></a>
   &nbsp; · &nbsp;
   <a href="docs/RESEARCH.md">Architectural references</a>
   &nbsp; · &nbsp;
@@ -99,13 +99,13 @@ Set `TEST_URL` to test another local/deployed address. Screenshots and JSON resu
 
 ## Publish with GitHub Pages
 
-The live explorer is hosted at **[cristianexer.github.io/Lloyds-of-London-3D-building](https://cristianexer.github.io/Lloyds-of-London-3D-building/)**.
+The live explorer is hosted at **[lloyds.cristianexer.dev](https://lloyds.cristianexer.dev/)**.
 
-Every push to `main` runs [the Pages workflow](.github/workflows/pages.yml): install the lockfile, run the core tests, build for the repository subpath, upload `dist/`, and deploy to the `github-pages` environment. The workflow can also be run manually from Actions.
+Every push to `main` runs [the Pages workflow](.github/workflows/pages.yml): install the lockfile, run the core tests, read the configured Pages address and build for its path, upload `dist/`, and deploy to the `github-pages` environment. The workflow can also be run manually from Actions.
 
-For a fork, enable **Settings → Pages → Source → GitHub Actions** and set the workflow’s `VITE_BASE_PATH` to `/<your-repository-name>/`. Root-domain hosts use `/`, which is the local default. Vite’s [static deployment guide](https://vite.dev/guide/static-deploy#github-pages) explains the base-path distinction.
+For a fork, enable **Settings → Pages → Source → GitHub Actions**. The workflow reads the Pages configuration before building: a custom domain uses `/`; a project hosted on `github.io` uses its repository subpath. No hardcoded repository path needs changing. Vite’s [static deployment guide](https://vite.dev/guide/static-deploy#github-pages) explains the base-path distinction.
 
-To reproduce the Pages build locally:
+To reproduce the current custom-domain build locally, use `npm run build`. To check a repository-subpath deployment instead:
 
 ```sh
 VITE_BASE_PATH=/Lloyds-of-London-3D-building/ npm run build
