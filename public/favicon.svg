@@ -1,1 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><rect width="48" height="48" rx="10" fill="#1b1e1c"/><g stroke="#d1b784" stroke-width="2" fill="none"><path d="M12 38V15h6v23M30 38V10h6v28M20 38V20h8v18M10 24h28M10 31h28"/></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <title>Inside Lloyd’s architectural explorer</title>
+  <rect width="32" height="32" rx="7" fill="#1b241f"/>
+  <g fill="none" stroke="#d1bd91" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round">
+    <path d="M5.5 26V12h5v14M22 26V6h4.5v20M10.5 26V15a5.75 5.75 0 0 1 11.5 0v11M4 26h24"/>
+    <path d="M11 17h10M11 21.5h10M16.3 10v16M6 16.5h4M6 21.5h4M22.5 11h3.5M22.5 16h3.5M22.5 21h3.5" stroke-width="1"/>
+    <path d="M24 5V3.5h4M8 11V8.5h3" stroke="#9eaf9d" stroke-width="1"/>
+  </g>
+</svg>
