@@ -830,6 +830,169 @@ export function generateBuilding(): Part[] {
   );
   beam('Clock minute hand', 'dark', [0, 10, 13.2], [0, 10.45, 13.2], 0.025);
   beam('Clock hour hand', 'dark', [0, 10, 13.2], [0.29, 10, 13.2], 0.035);
+  // Street-level relationships are explanatory, not a cadastral site plan.
+  context('structure', 'arrival');
+  for (const side of [-1, 1]) {
+    box('Granite street edge', 'concrete', [side * 33, 0.65, 0], [3.5, 0.6, 72]);
+    box('Perimeter well', 'dark', [side * 29.5, 0.16, 0], [3.5, 0.12, 71]);
+    box('Granite end pavement', 'concrete', [0, 0.65, side * 37], [62, 0.6, 3.5]);
+    box('End perimeter well', 'dark', [0, 0.16, side * 33.5], [58, 0.12, 3.5]);
+    for (let z = -34; z <= 34; z += 2) {
+      if (Math.abs(z) < 5 || Math.abs(z + 27) < 4) continue;
+      cyl('Slender perimeter railing upright', 'steel', [side * 31.3, 1.6, z], 0.045, 1.4);
+      for (const y of [1.35, 2.15])
+        beam('Perimeter railing', 'steel', [side * 31.3, y, z], [side * 31.3, y, z + 2], 0.035);
+      box('Granite paving joint', 'dark', [side * 33, 0.963, z], [3.4, 0.012, 0.025]);
+    }
+    for (let x = -28; x <= 28; x += 2) {
+      box('End paving joint', 'dark', [x, 0.963, side * 37], [0.025, 0.012, 3.4]);
+      if (Math.abs(x) < 9 || x > 19) continue;
+      cyl('End railing upright', 'steel', [x, 1.6, side * 35.2], 0.045, 1.4);
+      for (const y of [1.35, 2.15])
+        beam('End perimeter railing', 'steel', [x, y, side * 35.2], [x + 2, y, side * 35.2], 0.035);
+    }
+    for (const z of [-27, 0]) {
+      box('Entrance bridge', 'concrete', [side * 28, 1.12, z], [9.5, 0.4, 5]);
+      for (const dz of [-2.45, 2.45]) {
+        beam(
+          'Bridge handrail',
+          'steel',
+          [side * 23.5, 2.4, z + dz],
+          [side * 32.5, 2.4, z + dz],
+          0.07,
+        );
+        for (let k = 0; k < 5; k++)
+          cyl('Bridge railing upright', 'steel', [side * (24 + k * 2), 1.85, z + dz], 0.045, 1.1);
+      }
+    }
+  }
+  for (let k = 0; k < 6; k++)
+    box('Entrance granite step', 'concrete', [0, 0.98 + k * 0.16, 35.3 - k * 0.5], [8, 0.24, 0.6]);
+  for (const x of [-6, 6, 21, 29]) cyl('Street bollard', 'steel', [x, 1.6, 37.5], 0.16, 1.3);
+  box('Reception glazed wall', 'glass', [20.2, 3.05, 0], [0.12, 3.8, 7]);
+  for (const z of [-2, 2]) {
+    cyl('Revolving door roof', 'steel', [21, 4.75, z], 1.35, 0.15);
+    for (let k = 0; k < 3; k++)
+      box('Revolving glass door', 'glass', [21, 3, z], [2.3, 3.4, 0.07], [0, (k * Math.PI) / 3, 0]);
+  }
+  context('services', 'ground-vents', 'tower', [-18, 0, 12]);
+  for (let k = 0; k < 7; k++) {
+    cyl('Ground air intake body', 'steel', [-29.5, 2.2, 13 + k * 2.7], 0.55, 2.7);
+    cyl('Intake dark opening', 'dark', [-29.5, 3.58, 13 + k * 2.7], 0.48, 0.08);
+    for (let j = 0; j < 3; j++)
+      cyl('Intake louvre rim', 'steel', [-29.5, 3.2 + j * 0.16, 13 + k * 2.7], 0.59, 0.07);
+  }
+  for (let f = 1; f <= 6; f++) {
+    const y = 2 + f * pitch;
+    context('services', 'meeting-pods', 'tower', [0, f * 1.9, 48], f);
+    box('Meeting pod enclosure', 'steel', [0, y + 1.95, 29], [9.8, 3.4, 4]);
+    box('Meeting pod floor band', 'dark', [0, y + 0.18, 29], [10.1, 0.22, 4.15]);
+    for (const x of [-2.6, 2.6]) {
+      add(
+        'Meeting pod porthole rim',
+        'cylinder',
+        'steel',
+        [x, y + 2.05, 31.04],
+        [0.55, 0.12, 0.55],
+        [Math.PI / 2, 0, 0],
+      );
+      add(
+        'Meeting pod porthole glazing',
+        'cylinder',
+        'glass',
+        [x, y + 2.05, 31.12],
+        [0.43, 0.03, 0.43],
+        [Math.PI / 2, 0, 0],
+      );
+    }
+    for (const x of [-5.3, 5.3])
+      cyl('Meeting pod support', 'concrete', [x, y + 2.1, 29], 0.26, pitch);
+  }
+  context('heritage', 'cooper-entrance');
+  const portalX = -3,
+    portalZ = -34.1;
+  for (const side of [-1, 1]) {
+    box(
+      'Cooper entrance stone pier',
+      'concrete',
+      [portalX + side * 5.6, 6.9, portalZ],
+      [3.2, 11.8, 1.25],
+    );
+    for (let y = 1.5; y < 12.6; y += 0.8)
+      box(
+        'Stone pier course',
+        'dark',
+        [portalX + side * 5.6, y, portalZ - 0.638],
+        [3.16, 0.025, 0.018],
+      );
+    box('Doorway stone jamb', 'concrete', [portalX + side * 2.4, 4, portalZ + 0.6], [0.7, 6, 0.9]);
+  }
+  for (let k = 0; k < 24; k++) {
+    const a = ((k + 0.5) / 24) * Math.PI;
+    box(
+      'Entrance arch voussoir',
+      'concrete',
+      [portalX + Math.cos(a) * 4.35, 8.9 + Math.sin(a) * 4.35, portalZ],
+      [0.7, 0.56, 1.3],
+      [0, 0, a],
+    );
+  }
+  box('Cooper entrance upper frieze', 'concrete', [portalX, 14.25, portalZ], [14.8, 1.6, 1.25]);
+  for (let k = -2; k <= 2; k++)
+    box(
+      'Upper frieze window indication',
+      'dark',
+      [portalX + k * 2.45, 14.2, portalZ - 0.64],
+      [0.85, 0.85, 0.04],
+    );
+  for (const y of [1.1, 13.4, 15.15])
+    box('Cooper entrance cornice', 'concrete', [portalX, y, portalZ], [15.4, 0.32, 1.8]);
+  for (const side of [-1, 1]) {
+    box(
+      'Classical pediment rake',
+      'concrete',
+      [portalX + side * 3.65, 16.3, portalZ],
+      [7.8, 0.42, 1.8],
+      [0, 0, -side * 0.3],
+    );
+    box(
+      'Entrance memorial panel indication',
+      'dark',
+      [portalX + side * 5.6, 4.5, portalZ - 0.66],
+      [1.4, 2.5, 0.09],
+    );
+  }
+  box('Cooper entrance door lintel', 'concrete', [portalX, 7.15, portalZ + 0.6], [5.5, 0.4, 1.2]);
+  box('Cooper entrance doors', 'dark', [portalX, 4.15, portalZ + 0.8], [4.1, 5.7, 0.2]);
+  box('Entrance connecting walkway', 'concrete', [portalX, 1.1, -30.5], [6, 0.3, 10]);
+  context('circulation', 'entrance-canopy', 'roof', [16, 12, -12]);
+  for (let z = -35; z <= -27; z += 2) {
+    for (let k = 0; k < 16; k++) {
+      const a = (k / 16) * Math.PI,
+        b = ((k + 1) / 16) * Math.PI;
+      beam(
+        'Entrance canopy vault rib',
+        'steel',
+        [25 + Math.cos(a) * 3.4, 5.8 + Math.sin(a) * 2, z],
+        [25 + Math.cos(b) * 3.4, 5.8 + Math.sin(b) * 2, z],
+        0.06,
+      );
+      if (z < -27) {
+        const middle = (a + b) / 2;
+        box(
+          'Entrance canopy glazing',
+          'glass',
+          [25 + Math.cos(middle) * 3.4, 5.8 + Math.sin(middle) * 2, z + 1],
+          [0.68, 0.04, 1.96],
+          [0, 0, Math.atan2(2 * Math.cos(middle), -3.4 * Math.sin(middle))],
+        );
+      }
+    }
+  }
+  for (const x of [21.6, 28.4]) {
+    beam('Canopy edge beam', 'steel', [x, 5.8, -35.5], [x, 5.8, -26], 0.13);
+    beam('Canopy suspension tie', 'steel', [x, 5.8, -35], [x, 10, -26], 0.075);
+  }
   return parts;
 }
 export const parts = generateBuilding();

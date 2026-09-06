@@ -22,6 +22,23 @@ The six-tower arrangement, stepped central building, atrium, roof, silver stair/
 
 Rectangular service pods, curved D-shaped stair casings, open landings, pipe collars and bends, maintenance ladders and façade supports were refined against the additional supplied close-ups. Small details are systematic interpretations rather than a claim to reproduce every real fitting.
 
-Desk layouts, computers, radial stair treads, escalator dimensions and heritage ornament are illustrative. The Rostrum is intentionally simplified. The retained historic entrance, basements, Adam Room, neighbouring buildings, furniture on upper office levels and concealed building services are not fully reconstructed.
+Desk layouts, computers, radial stair treads, escalator dimensions and heritage ornament are illustrative. The Rostrum is intentionally simplified. The Cooper entrance is now represented as an illustrative stone screen; sculpture, full ornamental detail and its exact site relationship are not reconstructed. Basements, Adam Room, neighbouring buildings, furniture on upper office levels and concealed building services remain outside the model’s scope.
 
 The site is **Lloyd’s of London, the insurance marketplace**. Labels reading “Lloyds Bank” in supplied map captures are not taken as subject identification. No banking logo or imagery is used.
+
+## Final reference check
+
+[Historic England’s listing](https://historicengland.org.uk/listing/the-list/list-entry/1405493) was consulted on 6 September 2026 for the retained Cooper entrance, vaulted canopy, meeting pods, ground intakes and street-edge treatment. These features are separately identified in the catalogue. The geometric interpretation is deliberately less detailed than the listed fabric.
+
+The supplied aerial and section references were checked against the model’s massing:
+
+| Relationship                                        | Model treatment                                                                          |
+| --------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| Six perimeter tower groups with different heights   | Retained; positional labels describe model locations, not official tower numbers.        |
+| Four large plant-room blocks                        | Retained above the taller towers.                                                        |
+| Stepped galleries at the Leadenhall Place end       | Two upper setbacks preserve the exposed terrace silhouette.                              |
+| Central barrel vault and tall end glazing           | Retained as separate assemblies; the four-section explosion is an explanatory animation. |
+| Curved stairs beside rectangular pods and risers    | Separate casings, landings, pods and pipes use distinct offsets.                         |
+| Lower meeting pods, entrance screen and street base | Added as approximate or illustrative assemblies.                                         |
+
+This was a reference comparison, not a dimensional validation: the source images do not provide a consistently scaled, complete survey. Existing dimensions were not arbitrarily adjusted to imply precision the sources cannot support.

@@ -10,6 +10,10 @@ export interface ExplorerState {
   section: number;
   floor: number;
   facade: number;
+  guides: boolean;
+  upperFloors: 'hide' | 'ghost';
+  setGuides: (value: boolean) => void;
+  setUpperFloors: (value: 'hide' | 'ghost') => void;
   selected: string | null;
   hovered: string | null;
   isolated: string | null;
@@ -49,6 +53,8 @@ const initial = {
   section: 0,
   floor: 3,
   facade: 0.62,
+  guides: true,
+  upperFloors: 'hide' as const,
   selected: null,
   hovered: null,
   isolated: null,
@@ -93,6 +99,9 @@ export const useExplorer = create<ExplorerState>((set, get) => ({
         tour: null,
       });
   },
+  setGuides: (guides) => set({ guides }),
+  setUpperFloors: (upperFloors) =>
+    set((s) => ({ upperFloors, view: 'roof', viewNonce: s.viewNonce + 1 })),
   setSection: (section) => set({ section: Math.min(1, Math.max(0, section)) }),
   setFloor: (floor) =>
     set((s) => ({
@@ -152,4 +161,17 @@ export function isVisible(
   if (s.mode === 'market' && (part.level > 0 || part.system === 'facade' || part.system === 'roof'))
     return false;
   return true;
+}
+
+/** Ghosts retain context but never intercept selection or override visibility filters. */
+export function isGhosted(
+  part: Part,
+  s: Pick<ExplorerState, 'isolated' | 'hidden' | 'mode' | 'floor' | 'upperFloors'>,
+) {
+  return (
+    s.mode === 'floors' &&
+    s.upperFloors === 'ghost' &&
+    part.level > s.floor &&
+    isVisible(part, { ...s, mode: 'exterior' })
+  );
 }

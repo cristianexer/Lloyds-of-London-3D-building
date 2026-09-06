@@ -2190,3 +2190,57 @@ input[type='range']::-webkit-slider-thumb {
     display: none;
   }
 }
+
+.option-control {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 10px;
+  white-space: nowrap;
+  color: var(--muted);
+}
+.option-control input {
+  accent-color: #c6b58d;
+  width: 13px;
+  height: 13px;
+  margin: 0;
+}
+.option-control select {
+  color: inherit;
+  background: transparent;
+  border: 1px solid #515943;
+  border-radius: 4px;
+  padding: 3px 5px;
+  font: inherit;
+}
+.connection-label {
+  white-space: nowrap;
+  border: 1px solid #73765388;
+  color: #d6c799;
+  background: #1e271eee;
+  border-radius: 3px;
+  padding: 5px 8px;
+  font:
+    10px Arial,
+    sans-serif;
+  letter-spacing: 0.035em;
+  cursor: pointer;
+}
+.connection-label:hover,
+.connection-label:focus-visible {
+  border-color: #d6c799;
+  color: #fff1c9;
+}
+@media (max-width: 760px) {
+  .dock-secondary {
+    flex-wrap: wrap;
+    gap: 8px 14px;
+  }
+  .dock-secondary .model-tag {
+    display: none;
+  }
+  .connection-label {
+    font-size: 9px;
+    padding: 4px 6px;
+  }
+}

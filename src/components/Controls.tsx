@@ -154,7 +154,9 @@ export function BottomControls() {
                 : s.mode === 'section'
                   ? 'A section through the atrium'
                   : s.mode === 'floors'
-                    ? 'Levels above are hidden'
+                    ? s.upperFloors === 'ghost'
+                      ? 'Levels above remain as a ghost'
+                      : 'Levels above are hidden'
                     : 'A fictional placement journey'}
             </span>
           </div>
@@ -248,6 +250,29 @@ export function BottomControls() {
                   ? 'Floor mode · explosion unavailable'
                   : 'Fictional educational example'}
           </span>
+          {s.mode === 'exterior' && (
+            <label className="option-control">
+              <input
+                type="checkbox"
+                checked={s.guides}
+                onChange={(e) => s.setGuides(e.target.checked)}
+              />{' '}
+              Connection guides
+            </label>
+          )}
+          {s.mode === 'floors' && (
+            <label className="option-control">
+              Levels above
+              <select
+                aria-label="Levels above"
+                value={s.upperFloors}
+                onChange={(e) => s.setUpperFloors(e.target.value as 'hide' | 'ghost')}
+              >
+                <option value="hide">Hide</option>
+                <option value="ghost">Ghost</option>
+              </select>
+            </label>
+          )}
           {s.mode !== 'market' && (
             <label className="facade-control">
               Façade opacity

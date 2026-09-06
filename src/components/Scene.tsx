@@ -6,7 +6,10 @@ import * as THREE from 'three';
 import { parts, partById } from '../model/building';
 import { positionAt } from '../model/explosion';
 import type { GeometryKind, MaterialKind, Part, Vec3 } from '../model/types';
-import { isVisible, matches, useExplorer, type View } from '../store';
+import { isGhosted, isVisible, matches, useExplorer, type View } from '../store';
+
+import { makeGeometry } from '../model/geometry';
+import { SectionCaps, ExplosionGuides } from './ModelOverlays';
 
 type Batch = {
   key: string;
@@ -14,6 +17,8 @@ type Batch = {
   material: THREE.MeshStandardMaterial;
   parts: Part[];
   mesh: THREE.InstancedMesh | null;
+  ghost: THREE.InstancedMesh | null;
+  ghostMaterial: THREE.MeshBasicMaterial;
   facade: boolean;
   glass: boolean;
 };
@@ -28,45 +33,6 @@ const materialColours: Record<MaterialKind, string> = {
   blue: '#456d88',
 };
 const clipPlane = new THREE.Plane(new THREE.Vector3(-1, 0, 0), 1000);
-function makeGeometry(kind: GeometryKind) {
-  switch (kind) {
-    case 'box':
-      return new THREE.BoxGeometry(1, 1, 1);
-    case 'cylinder':
-      return new THREE.CylinderGeometry(1, 1, 1, 12);
-    case 'sphere':
-      return new THREE.SphereGeometry(1, 10, 8);
-    case 'shell':
-      return new THREE.CylinderGeometry(1, 1, 1, 24, 1, true, 0, Math.PI * 1.5);
-    case 'ring':
-      return new THREE.TorusGeometry(1, 0.035, 4, 32);
-    case 'bell':
-      return new THREE.CylinderGeometry(0.45, 1, 1, 16, 1, true);
-    case 'stair-shell': {
-      const outline = new THREE.Shape();
-      outline.moveTo(-1, -1);
-      outline.lineTo(0, -1);
-      outline.absarc(0, 0, 1, -Math.PI / 2, Math.PI / 2, false);
-      outline.lineTo(-1, 1);
-      outline.closePath();
-      const hole = new THREE.Path();
-      hole.moveTo(-0.97, -0.97);
-      hole.lineTo(-0.97, 0.97);
-      hole.lineTo(0, 0.97);
-      hole.absarc(0, 0, 0.97, Math.PI / 2, -Math.PI / 2, true);
-      hole.closePath();
-      outline.holes.push(hole);
-      const g = new THREE.ExtrudeGeometry(outline, {
-        depth: 1,
-        bevelEnabled: false,
-        curveSegments: 24,
-      });
-      g.rotateX(Math.PI / 2);
-      g.translate(0, 0.5, 0);
-      return g;
-    }
-  }
-}
 function makeBatches() {
   const map = new Map<string, Batch>();
   const geometries = new Map<GeometryKind, THREE.BufferGeometry>();
@@ -105,7 +71,22 @@ function makeBatches() {
         m.emissive = new THREE.Color('#b78948');
         m.emissiveIntensity = 0.65;
       }
-      map.set(key, { key, geometry: g, material: m, parts: [], mesh: null, facade, glass });
+      map.set(key, {
+        key,
+        geometry: g,
+        material: m,
+        parts: [],
+        mesh: null,
+        ghost: null,
+        ghostMaterial: new THREE.MeshBasicMaterial({
+          color: '#a6b6ad',
+          transparent: true,
+          opacity: glass ? 0.004 : 0.014,
+          depthWrite: false,
+        }),
+        facade,
+        glass,
+      });
     }
     map.get(key)!.parts.push(p);
   }
@@ -129,7 +110,10 @@ function Model() {
   useEffect(
     () => () => {
       new Set(batches.map((b) => b.geometry)).forEach((g) => g.dispose());
-      batches.forEach((b) => b.material.dispose());
+      batches.forEach((b) => {
+        b.material.dispose();
+        b.ghostMaterial.dispose();
+      });
     },
     [batches],
   );
@@ -172,6 +156,11 @@ function Model() {
         dummy.scale.set(...(isVisible(p, s) ? p.scale : ([0, 0, 0] as Vec3)));
         dummy.updateMatrix();
         batch.mesh!.setMatrixAt(i, dummy.matrix);
+        if (batch.ghost) {
+          dummy.scale.set(...(isGhosted(p, s) ? p.scale : ([0, 0, 0] as Vec3)));
+          dummy.updateMatrix();
+          batch.ghost.setMatrixAt(i, dummy.matrix);
+        }
         const selected = matches(p, s.selected),
           hovered = matches(p, s.hovered);
         colour.set(
@@ -180,6 +169,11 @@ function Model() {
         if (s.selected && !selected) colour.multiplyScalar(0.76);
         batch.mesh!.setColorAt(i, colour);
       });
+      if (batch.ghost) {
+        batch.ghost.visible = s.mode === 'floors' && s.upperFloors === 'ghost';
+        batch.ghost.instanceMatrix.needsUpdate = true;
+        batch.ghost.computeBoundingSphere();
+      }
       batch.mesh.instanceMatrix.needsUpdate = true;
       if (batch.mesh.instanceColor) batch.mesh.instanceColor.needsUpdate = true;
       batch.mesh.computeBoundingSphere();
@@ -193,42 +187,60 @@ function Model() {
     return batch.parts[e.instanceId];
   }
   return (
-    <group name="Lloyd’s building">
-      {batches.map((b) => (
-        <instancedMesh
-          key={b.key}
-          name={b.key}
-          ref={(m) => {
-            b.mesh = m;
-            if (m) m.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
-          }}
-          args={[b.geometry, b.material, b.parts.length]}
-          frustumCulled={false}
-          castShadow={!b.glass}
-          receiveShadow
-          onClick={(e) => {
-            const p = hit(e, b);
-            if (p) {
-              e.stopPropagation();
-              useExplorer.getState().select(p.id);
-            }
-          }}
-          onPointerMove={(e) => {
-            if (e.pointerType === 'touch') return;
-            const p = hit(e, b);
-            if (p) {
-              e.stopPropagation();
-              if (useExplorer.getState().hovered !== p.id) useExplorer.getState().hover(p.id);
-            }
-          }}
-          onPointerOut={() => useExplorer.getState().hover(null)}
-        />
-      ))}
-    </group>
+    <>
+      <group name="Lloyd’s building">
+        {batches.map((b) => (
+          <instancedMesh
+            key={b.key}
+            name={b.key}
+            ref={(m) => {
+              b.mesh = m;
+              if (m) m.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+            }}
+            args={[b.geometry, b.material, b.parts.length]}
+            frustumCulled={false}
+            castShadow={!b.glass}
+            receiveShadow
+            onClick={(e) => {
+              const p = hit(e, b);
+              if (p) {
+                e.stopPropagation();
+                useExplorer.getState().select(p.id);
+              }
+            }}
+            onPointerMove={(e) => {
+              if (e.pointerType === 'touch') return;
+              const p = hit(e, b);
+              if (p) {
+                e.stopPropagation();
+                if (useExplorer.getState().hovered !== p.id) useExplorer.getState().hover(p.id);
+              }
+            }}
+            onPointerOut={() => useExplorer.getState().hover(null)}
+          />
+        ))}
+      </group>
+      <group name="Upper floor context">
+        {batches.map((b) => (
+          <instancedMesh
+            key={b.key}
+            name={`ghost-${b.key}`}
+            ref={(m) => {
+              b.ghost = m;
+              if (m) m.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+            }}
+            args={[b.geometry, b.ghostMaterial, b.parts.length]}
+            visible={false}
+            frustumCulled={false}
+            raycast={() => {}}
+          />
+        ))}
+      </group>
+    </>
   );
 }
 const views: Record<Exclude<View, 'frame'>, { position: Vec3; target: Vec3 }> = {
-  hero: { position: [113, 87, 139], target: [0, 36, 0] },
+  hero: { position: [128, 94, 157], target: [0, 36, 0] },
   lime: { position: [137, 65, 80], target: [0, 34, 0] },
   rear: { position: [-118, 90, -122], target: [0, 36, 0] },
   roof: { position: [79, 146, 82], target: [0, 35, 0] },
@@ -250,7 +262,10 @@ function CameraRig() {
     let v = s.view === 'frame' ? views.hero : views[s.view];
     if (s.mode === 'market') v = { position: [48, 60, 68], target: [0, 3, 0] };
     if (s.mode === 'floors' && s.view === 'roof')
-      v = { position: [70, 103 + s.floor * 2.4, 88], target: [0, 3 + s.floor * 2.4, 0] };
+      v =
+        s.upperFloors === 'ghost'
+          ? { position: [112, 124, 141], target: [0, 34, 0] }
+          : { position: [70, 103 + s.floor * 2.4, 88], target: [0, 3 + s.floor * 2.4, 0] };
     if (s.view === 'frame' && s.selected) {
       const ps = parts.filter((p) => matches(p, s.selected));
       if (ps.length) {
@@ -291,7 +306,7 @@ function CameraRig() {
     if (s.mode === 'exterior' && s.explosion > 0) {
       pos
         .sub(target)
-        .multiplyScalar(1 + s.explosion * 0.78)
+        .multiplyScalar(1 + s.explosion * 0.86)
         .add(target);
       pos.y += s.explosion * 29;
       target.y += s.explosion * 29;
@@ -361,7 +376,7 @@ function CameraRig() {
     if (s.explosion !== framedExplosion.current && s.mode === 'exterior') {
       const old = framedExplosion.current,
         next = s.explosion,
-        ratio = (1 + next * 0.78) / (1 + old * 0.78);
+        ratio = (1 + next * 0.86) / (1 + old * 0.86);
       const t = new THREE.Vector3(
         ...(moving.current ? desired.current.target : (controls.current.target.toArray() as Vec3)),
       );
@@ -629,6 +644,8 @@ export function Scene({ onReady, onError }: { onReady: () => void; onError: () =
       >
         <Studio />
         <Model />
+        <SectionCaps />
+        <ExplosionGuides />
         <MarketHotspots />
         <CameraRig />
         <RenderStatus onReady={onReady} />

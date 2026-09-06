@@ -45,6 +45,58 @@ export const systems: System[] = [
 ];
 export const assemblies: Assembly[] = [
   {
+    id: 'arrival',
+    name: 'Street edges, wells & access bridges',
+    system: 'structure',
+    description:
+      'Granite paving, railings and bridges separate the building from the surrounding streets.',
+    significance:
+      'A simplified ground-level setting makes the exposed base and points of arrival easier to read.',
+    accuracy: 'Illustrative',
+    sources: ['historic'],
+  },
+  {
+    id: 'cooper-entrance',
+    name: 'Retained Cooper entrance',
+    system: 'heritage',
+    description:
+      'The stone entrance screen survives from Sir Edwin Cooper’s earlier Lloyd’s building on Leadenhall Street.',
+    significance:
+      'A restrained interpretation of the arch, pediment and stonework; sculptural ornament and exact placement are not reproduced.',
+    accuracy: 'Illustrative',
+    sources: ['historic'],
+  },
+  {
+    id: 'entrance-canopy',
+    name: 'Vaulted entrance canopy',
+    system: 'circulation',
+    description: 'A small glazed vault marks an entrance at the base of the service towers.',
+    significance:
+      'The canopy repeats the architectural language of the central roof at street scale.',
+    accuracy: 'Approximate',
+    sources: ['historic'],
+  },
+  {
+    id: 'meeting-pods',
+    name: 'Leadenhall Place meeting pods',
+    system: 'services',
+    description: 'Stacked meeting-room enclosures articulate the Leadenhall Place end.',
+    significance:
+      'These broader pods are distinct from the service cabins; their interiors are not reproduced.',
+    accuracy: 'Approximate',
+    sources: ['historic'],
+  },
+  {
+    id: 'ground-vents',
+    name: 'Ground-level air intakes',
+    system: 'services',
+    description: 'A row of seven cylindrical intakes stands outside the south-west corner.',
+    significance:
+      'The exposed services continue all the way down to ground level. Positions and terminations are simplified.',
+    accuracy: 'Approximate',
+    sources: ['historic'],
+  },
+  {
     id: 'columns',
     name: 'Concrete columns & capitals',
     system: 'structure',

@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { useExplorer, isVisible, matches } from '../src/store';
+import { useExplorer, isVisible, isGhosted, matches } from '../src/store';
 import { parts, generateBuilding } from '../src/model/building';
 import { assemblies } from '../src/model/catalogue';
 import { positionAt, stageProgress } from '../src/model/explosion';
@@ -157,4 +157,24 @@ describe('reproducible component catalogue', () => {
     }
     expect(assemblies.find((a) => a.id === 'boxes')?.accuracy).toBe('Illustrative');
   });
+});
+
+it('ghost floors preserve filters and never become selectable foreground geometry', () => {
+  state().setMode('floors');
+  state().setFloor(3);
+  state().setUpperFloors('ghost');
+  const upper = parts.find((p) => p.level > 3)!;
+  expect(isGhosted(upper, state())).toBe(true);
+  expect(isVisible(upper, state())).toBe(false);
+  state().select(upper.id);
+  state().hide();
+  expect(isGhosted(upper, state())).toBe(false);
+  state().restore();
+  state().setUpperFloors('hide');
+  expect(isGhosted(upper, state())).toBe(false);
+  state().setUpperFloors('ghost');
+  state().setGuides(false);
+  state().reset();
+  expect(state().upperFloors).toBe('hide');
+  expect(state().guides).toBe(true);
 });

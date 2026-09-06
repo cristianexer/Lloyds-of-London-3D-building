@@ -26,7 +26,16 @@ try {
   assert.equal(await page.evaluate(() => window.__LLOYDS__.store.getState().explosion), 0);
   await page.getByRole('button', { name: 'Floors', exact: true }).tap();
   await page.getByLabel('Explore a model level').selectOption('2');
+  await page.getByLabel('Levels above', { exact: true }).selectOption('ghost');
   await page.waitForTimeout(1200);
+  assert(
+    await page.evaluate(() =>
+      window.__LLOYDS__.scene
+        .getObjectByName('Upper floor context')
+        .children.every((m) => m.visible),
+    ),
+  );
+  await page.screenshot({ path: 'output/playwright/webkit-ghost.png' });
   await page.getByRole('button', { name: 'Reset view', exact: true }).last().tap();
   await page.waitForTimeout(1000);
   await page.getByRole('textbox', { name: 'Search components' }).fill('service pods');
@@ -49,7 +58,7 @@ try {
       'WebGL model rendering',
       '100% staged explosion',
       'section reassembly',
-      'floor selection',
+      'floor selection and ghost context',
       'touch search/selection',
       'service-pod isolation and framing',
       'reset',

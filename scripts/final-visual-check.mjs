@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 const browser = await chromium.launch({ channel: 'chrome', headless: true });
 const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
 try {
-  await page.goto('http://localhost:4173');
+  await page.goto(process.env.TEST_URL || 'http://localhost:4173');
   await page.waitForFunction(() => window.__LLOYDS__);
   await page.waitForTimeout(1300);
   await page.getByRole('combobox', { name: 'Camera viewpoint' }).selectOption('room');

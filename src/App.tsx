@@ -391,7 +391,8 @@ export default function App() {
             <dt>Layers</dt>
             <dd>
               Drag the explosion slider in Exterior mode. Cutaway and Floors reassemble the model
-              first.
+              first. Connection guides label separated assemblies; choose Hide or Ghost for levels
+              above your selected floor.
             </dd>
           </div>
         </dl>
