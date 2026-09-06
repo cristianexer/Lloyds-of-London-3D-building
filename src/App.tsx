@@ -19,6 +19,7 @@ import {
   Compass,
   CircleHelp,
   Network,
+  Github,
 } from 'lucide-react';
 import { useExplorer } from './store';
 import { Hierarchy, InfoPanel } from './components/Panels';
@@ -158,6 +159,7 @@ export default function App() {
           </button>
           <button
             className="tour-button"
+            aria-label="Guided tour"
             onClick={() => {
               if (window.innerWidth < 900 && hierarchyOpen)
                 useExplorer.getState().toggleHierarchy();
@@ -168,6 +170,16 @@ export default function App() {
             <span>Guided tour</span>
             <ArrowRight size={14} />
           </button>
+          <a
+            className="icon-button github-link"
+            href="https://github.com/cristianexer/Lloyds-of-London-3D-building"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="View source on GitHub (opens in a new tab)"
+            title="View source on GitHub"
+          >
+            <Github size={18} aria-hidden="true" />
+          </a>
           <button
             className="icon-button about-button"
             aria-label="About this project"

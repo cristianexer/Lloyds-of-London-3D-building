@@ -142,3 +142,7 @@ node --import tsx scripts/generate-banner.ts
 ```
 
 The banner is a compact interpretation; the live explorer contains the full geometry. Reference photographs remain outside the repository.
+
+## License
+
+[MIT](LICENSE) © 2026 Cristian Exer. Applies to this project’s original code and assets; third-party materials retain their respective rights and licenses.

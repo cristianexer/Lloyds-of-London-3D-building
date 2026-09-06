@@ -2244,3 +2244,15 @@ input[type='range']::-webkit-slider-thumb {
     padding: 4px 6px;
   }
 }
+
+@media (max-width: 380px) {
+  .tour-button > span {
+    display: none;
+  }
+  .tour-button {
+    width: 32px;
+    height: 34px;
+    justify-content: center;
+    padding: 0;
+  }
+}
