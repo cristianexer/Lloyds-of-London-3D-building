@@ -1,0 +1,17 @@
+{
+  "project": "Inside Lloyd’s — Interactive Building Explorer",
+  "updated": "2026-09-06",
+  "status": "Independent educational visualisation; not an official Lloyd’s product",
+  "assets": [
+    {"id":"procedural-building","creator":"Original code and geometry created for the Inside Lloyd’s project","path":"src/model/building.ts","type":"Original procedural Three.js geometry","licence":"Original project material; no third-party model licence applies. No separate licence grant is asserted for the underlying architecture.","modifications":"Reference-based reconstruction; simplified geometry, modelled service assemblies, authored staged explosion, illustrative interior furnishings. No imported mesh.","sourceUrls":["https://rshp.com/projects/office/lloyds-of-london/","https://www.lloyds.com/about-lloyds/the-lloyds-building"],"accuracy":"Approximate exterior, footprint and orientation. Illustrative interior, services routes and heritage details."},
+    {"id":"studio-environment","creator":"Inside Lloyd’s project","path":"src/components/Scene.tsx","type":"Procedural local PMREM reflection environment","licence":"Original project material","modifications":"Generated light panels and neutral surround; no downloaded HDRI, image or texture."},
+    {"id":"icons","creator":"Lucide contributors","path":"node_modules/lucide-react","sourceUrls":["https://github.com/lucide-icons/lucide"],"licence":"ISC; see dependency licence","modifications":"Unmodified SVG icon components, styled by application CSS."},
+    {"id":"reference-images","creator":"Various original photographers, mapping providers and drawing authors; not independently established","type":"User-supplied photographic and diagrammatic references","licence":"Not established. Used for visual reference only; image files are not bundled or redistributed.","modifications":"None; not included in the application."}
+  ],
+  "assetSearch": [
+    {"title":"1 Lime Street","creator":"msasurvey","url":"https://sketchfab.com/3d-models/1-lime-street-86fd85be32244490b2ba2936f16c1164","checked":"2026-09-06","result":"Search listing found. Detail page returned 403; downloadable geometry, redistribution licence and interior coverage could not be verified.","used":false,"downloaded":false,"decision":"Build an original procedural reconstruction instead. No claim to have inspected the candidate geometry."}
+  ],
+  "thirdPartyRuntime": {"React":"MIT","Three.js":"MIT","React Three Fiber":"MIT","Drei":"MIT","Zustand":"MIT","Lucide":"ISC","note":"Exact versions are locked in package-lock.json; full notices are supplied by the respective npm packages."},
+  "fonts":"System font stack: Georgia / Times New Roman and Arial / Helvetica. No font binaries or remote font requests.",
+  "data":"public/data/components.json and public/data/sources.json are reproducibly generated using npm run model:manifest."
+}
